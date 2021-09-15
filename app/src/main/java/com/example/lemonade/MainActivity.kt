@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
+import java.nio.channels.SelectableChannel
 
 class MainActivity : AppCompatActivity() {
 
@@ -67,10 +68,11 @@ class MainActivity : AppCompatActivity() {
         setViewElements()
         lemonImage!!.setOnClickListener {
             // TODO: call the method that handles the state when the image is clicked
+            clickLemonImage()
         }
         lemonImage!!.setOnLongClickListener {
             // TODO: replace 'false' with a call to the function that shows the squeeze count
-            false
+            showSnackbar()
         }
     }
 
@@ -111,6 +113,33 @@ class MainActivity : AppCompatActivity() {
 
         // TODO: lastly, before the function terminates we need to set the view elements so that the
         //  UI can reflect the correct state
+
+        when (lemonadeState) {
+            SELECT -> {
+                setViewElements()
+                lemonadeState = SQUEEZE
+                lemonSize = lemonTree.pick()
+                squeezeCount = 0
+            }
+            SQUEEZE -> {
+                setViewElements()
+                squeezeCount++
+                lemonSize--
+                if (lemonSize == 0) {
+                    lemonadeState = DRINK
+                }
+            }
+            DRINK -> {
+                setViewElements()
+                lemonSize = -1
+                lemonadeState = RESTART
+            }
+            RESTART -> {
+                setViewElements()
+                lemonadeState = SELECT
+            }
+        }
+
     }
 
     /**
@@ -126,6 +155,25 @@ class MainActivity : AppCompatActivity() {
         // TODO: Additionally, for each state, the lemonImage should be set to the corresponding
         //  drawable from the drawable resources. The drawables have the same names as the strings
         //  but remember that they are drawables, not strings.
+
+        when (lemonadeState) {
+            SELECT -> {
+                textAction.text = "Click to select a lemon!"
+                lemonImage?.setImageResource(R.drawable.lemon_tree)
+            }
+            SQUEEZE -> {
+                textAction.text = "Click to juice the lemon!"
+                lemonImage?.setImageResource(R.drawable.lemon_squeeze)
+            }
+            DRINK -> {
+                textAction.text = "Click to drink your lemonade!"
+                lemonImage?.setImageResource(R.drawable.lemon_drink)
+            }
+            RESTART -> {
+                textAction.text = "Click to start again!"
+                lemonImage?.setImageResource(R.drawable.lemon_restart)
+            }
+        }
     }
 
     /**

@@ -17,6 +17,7 @@ package com.example.lemonade
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
@@ -69,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         lemonImage!!.setOnClickListener {
             // TODO: call the method that handles the state when the image is clicked
             clickLemonImage()
+//            Log.d("log", lemonadeState)
         }
         lemonImage!!.setOnLongClickListener {
             // TODO: replace 'false' with a call to the function that shows the squeeze count
@@ -116,27 +118,28 @@ class MainActivity : AppCompatActivity() {
 
         when (lemonadeState) {
             SELECT -> {
-                setViewElements()
                 lemonadeState = SQUEEZE
                 lemonSize = lemonTree.pick()
                 squeezeCount = 0
+//                Log.d("log", lemonSize.toString())
+                setViewElements()
             }
             SQUEEZE -> {
-                setViewElements()
                 squeezeCount++
                 lemonSize--
                 if (lemonSize == 0) {
                     lemonadeState = DRINK
                 }
+                setViewElements()
             }
             DRINK -> {
-                setViewElements()
                 lemonSize = -1
                 lemonadeState = RESTART
+                setViewElements()
             }
             RESTART -> {
-                setViewElements()
                 lemonadeState = SELECT
+                setViewElements()
             }
         }
 
